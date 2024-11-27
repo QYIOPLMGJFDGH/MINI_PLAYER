@@ -1172,8 +1172,6 @@ def run_flask():
 
 # Bot run function (async)
 def run_bot():
-    loop = asyncio.new_event_loop()  # Create a new event loop for the bot
-    asyncio.set_event_loop(loop)  # Set this loop as the current event loop
     loop.run_until_complete(main())  # Run the bot
 
 if __name__ == "__main__":
