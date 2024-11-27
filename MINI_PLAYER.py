@@ -1086,7 +1086,7 @@ async def stream_end_handler(_, update: Update):
 
 dell = Flask(__name__)
 
-@app.route("/")
+@dell.route("/")
 def home():
     return "Bot is running on port 8000!"
 
