@@ -1087,6 +1087,10 @@ async def stream_end_handler(_, update: Update):
 
 app = Flask(__name__)  # Flask application instance
 
+# Logger setup (you can customize this part as per your logging setup)
+logging.basicConfig(level=logging.INFO)
+LOGGER = logging.getLogger(__name__)
+
 @app.route("/")
 def home():
     return "Bot is running on port 8000!"
@@ -1121,9 +1125,6 @@ async def main():
     if not STRING_SESSION:
         LOGGER.info("❌ 'STRING_SESSION' - Not Found ‼️")
         sys.exit()
-    # if not MONGO_DB_URL:
-        # LOGGER.info("'MONGO_DB_URL' - Not Found !!")
-        # sys.exit()
     LOGGER.info("✅ Required Variables Are Collected.")
     await asyncio.sleep(1)
     LOGGER.info("🌀 Starting All Clients ...")
@@ -1134,17 +1135,10 @@ async def main():
         sys.exit()
     if LOG_GROUP_ID != 0:
         try:
-            await bot.send_message(
-                LOG_GROUP_ID, "**🤖 Bot Started.**"
-            )
+            await bot.send_message(LOG_GROUP_ID, "**🤖 Bot Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Bot Started.")
-    try:
-        await app.start()
-    except Exception as e:
-        LOGGER.info(f"🚫 Assistant Error: {e}")
-        sys.exit()
     try:
         await app.join_chat("AdityaServer")
         await app.join_chat("AdityaDiscus")
@@ -1152,9 +1146,7 @@ async def main():
         pass
     if LOG_GROUP_ID != 0:
         try:
-            await app.send_message(
-                LOG_GROUP_ID, "**🦋 Assistant Started.**"
-            )
+            await app.send_message(LOG_GROUP_ID, "**🦋 Assistant Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Assistant Started.")
@@ -1165,14 +1157,15 @@ async def main():
         sys.exit()
     LOGGER.info("✅ PyTgCalls Started.")
     await asyncio.sleep(1)
-    LOGGER.info("✅ Sucessfully Hosted Your Bot !!")
+    LOGGER.info("✅ Successfully Hosted Your Bot !!")
     LOGGER.info("✅ Now Do Visit: @AdityaServer !!")
     await idle()
-# Flask run function
+
+# Flask run function (to be run in a separate thread)
 def run_flask():
     app.run(host="0.0.0.0", port=8000)  # Running Flask on port 8000
 
-# Bot run function (thread)
+# Bot run function (async)
 def run_bot():
     loop = asyncio.new_event_loop()  # Create a new event loop for the bot
     asyncio.set_event_loop(loop)  # Set this loop as the current event loop
