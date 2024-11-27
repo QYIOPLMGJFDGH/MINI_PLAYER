@@ -1159,6 +1159,8 @@ async def main():
     await asyncio.sleep(1)
     LOGGER.info("✅ Successfully Hosted Your Bot !!")
     LOGGER.info("✅ Now Do Visit: @AdityaServer !!")
+
+    # Move the idle() here so it runs in the main thread
     await idle()
 
 # Flask run function (to be run in a separate thread)
@@ -1172,9 +1174,9 @@ def run_bot():
     loop.run_until_complete(main())  # Run the bot
 
 if __name__ == "__main__":
-    # Start the bot in a separate thread
-    bot_thread = Thread(target=run_bot)
-    bot_thread.start()
+    # Start the Flask server in a separate thread
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
 
-    # Start the Flask server in the main thread
-    run_flask()
+    # Start the bot in the main thread
+    run_bot()
