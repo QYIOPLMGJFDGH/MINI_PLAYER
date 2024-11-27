@@ -102,6 +102,22 @@ def cdz(commands: Union[str, List[str]]):
 def rgx(pattern: Union[str, Pattern]):
     return pyrofl.regex(pattern)
 
+dell = Flask(__name__)
+
+# Define Clients
+app = Client(
+    name="App",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=str(STRING_SESSION),
+)
+
+bot = Client(
+    name="Bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
+)
 
 call = PyTgCalls(app)
 call_config = GroupCallConfig(auto_start=False)
@@ -1068,22 +1084,6 @@ async def stream_end_handler(_, update: Update):
     chat_id = update.chat_id
     return await change_stream(chat_id)
 
-dell = Flask(__name__)
-
-# Define Clients
-app = Client(
-    name="App",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-
-bot = Client(
-    name="Bot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN,
-)
 
 @app.route("/")
 def home():
