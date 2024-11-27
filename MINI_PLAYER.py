@@ -102,7 +102,6 @@ def cdz(commands: Union[str, List[str]]):
 def rgx(pattern: Union[str, Pattern]):
     return pyrofl.regex(pattern)
 
-dell = Flask(__name__)
 
 # Define Clients
 app = Client(
@@ -1084,6 +1083,8 @@ async def stream_end_handler(_, update: Update):
     chat_id = update.chat_id
     return await change_stream(chat_id)
 
+
+dell = Flask(__name__)
 
 @app.route("/")
 def home():
