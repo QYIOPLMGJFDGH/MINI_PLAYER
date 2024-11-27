@@ -1083,13 +1083,14 @@ async def stream_services_handler(_, update: Update):
 async def stream_end_handler(_, update: Update):
     chat_id = update.chat_id
     return await change_stream(chat_id)
-                
+
+dell = Flask(__name__)
 
 # Logger setup (you can customize this part as per your logging setup)
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
-@app.route("/")
+@dell.route("/")
 def home():
     return "Bot is running on port 8000!"
 
