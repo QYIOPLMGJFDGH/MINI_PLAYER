@@ -1091,7 +1091,7 @@ app = Flask(__name__)  # Flask application instance
 def home():
     return "Bot is running on port 8000!"
 
-async def bot_main():
+async def main():
     LOGGER.info("🐬 Updating Directories ...")
     if "cache" not in os.listdir():
         os.mkdir("cache")
@@ -1121,6 +1121,9 @@ async def bot_main():
     if not STRING_SESSION:
         LOGGER.info("❌ 'STRING_SESSION' - Not Found ‼️")
         sys.exit()
+    # if not MONGO_DB_URL:
+        # LOGGER.info("'MONGO_DB_URL' - Not Found !!")
+        # sys.exit()
     LOGGER.info("✅ Required Variables Are Collected.")
     await asyncio.sleep(1)
     LOGGER.info("🌀 Starting All Clients ...")
@@ -1138,40 +1141,33 @@ async def bot_main():
             pass
     LOGGER.info("✅ Bot Started.")
     try:
-        await app.start()  # Starting assistant (assuming `app` is the assistant instance)
+        await app.start()
     except Exception as e:
         LOGGER.info(f"🚫 Assistant Error: {e}")
         sys.exit()
-
     try:
         await app.join_chat("AdityaServer")
         await app.join_chat("AdityaDiscus")
     except Exception:
         pass
-
     if LOG_GROUP_ID != 0:
         try:
-            await app.send_message(LOG_GROUP_ID, "**🦋 Assistant Started.**")
+            await app.send_message(
+                LOG_GROUP_ID, "**🦋 Assistant Started.**"
+            )
         except Exception:
             pass
-
     LOGGER.info("✅ Assistant Started.")
-
-    # PyTgCalls or other tasks (example: call)
     try:
         await call.start()
     except Exception as e:
         LOGGER.info(f"🚫 PyTgCalls Error: {e}")
         sys.exit()
-    
     LOGGER.info("✅ PyTgCalls Started.")
-    
     await asyncio.sleep(1)
-    LOGGER.info("✅ Successfully Hosted Your Bot !!")
+    LOGGER.info("✅ Sucessfully Hosted Your Bot !!")
     LOGGER.info("✅ Now Do Visit: @AdityaServer !!")
-    
     await idle()
-
 # Flask run function
 def run_flask():
     app.run(host="0.0.0.0", port=8000)  # Running Flask on port 8000
@@ -1180,7 +1176,7 @@ def run_flask():
 def run_bot():
     loop = asyncio.new_event_loop()  # Create a new event loop for the bot
     asyncio.set_event_loop(loop)  # Set this loop as the current event loop
-    loop.run_until_complete(bot_main())  # Run the bot
+    loop.run_until_complete(main())  # Run the bot
 
 if __name__ == "__main__":
     # Start the bot in a separate thread
