@@ -1166,30 +1166,5 @@ async def stream_end_handler(_, update: Update):
     return await change_stream(chat_id)
                 
 
-# Flask app initialization
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot is running on Flask server!"
-
-# Flask ko alag thread me chalana
-def run_flask():
-    app.run(host="0.0.0.0", port=8000)
-
-# Bot ka main function (aapka logic yahaan chalega)
-async def main():
-    logging.info("Bot is starting...")
-    await asyncio.sleep(1)  # Placeholder for bot logic
-    logging.info("Bot started successfully!")
-    await asyncio.Event().wait()  # Keeps the bot running
-
-# Flask aur bot ko ek saath chalana
 if __name__ == "__main__":
-    # Flask server alag thread me start karein
-    flask_thread = Thread(target=run_flask)
-    flask_thread.start()
-
-    # Bot ka logic asyncio loop me chalayein
-    asyncio.run(main())
-
+    loop.run_until_complete(main())
