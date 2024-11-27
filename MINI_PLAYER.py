@@ -1085,8 +1085,6 @@ async def stream_end_handler(_, update: Update):
     return await change_stream(chat_id)
                 
 
-app = Flask(__name__)  # Flask application instance
-
 # Logger setup (you can customize this part as per your logging setup)
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
