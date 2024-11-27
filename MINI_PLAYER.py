@@ -103,22 +103,6 @@ def rgx(pattern: Union[str, Pattern]):
     return pyrofl.regex(pattern)
 
 
-# all clients
-
-app = Client(
-    name="App",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-
-bot = Client(
-    name="Bot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN,
-)
-
 call = PyTgCalls(app)
 call_config = GroupCallConfig(auto_start=False)
 
@@ -1086,11 +1070,22 @@ async def stream_end_handler(_, update: Update):
 
 dell = Flask(__name__)
 
-# Logger setup (you can customize this part as per your logging setup)
-logging.basicConfig(level=logging.INFO)
-LOGGER = logging.getLogger(__name__)
+# Define Clients
+app = Client(
+    name="App",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=str(STRING_SESSION),
+)
 
-@dell.route("/")
+bot = Client(
+    name="Bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
+)
+
+@app.route("/")
 def home():
     return "Bot is running on port 8000!"
 
@@ -1127,44 +1122,52 @@ async def main():
     LOGGER.info("✅ Required Variables Are Collected.")
     await asyncio.sleep(1)
     LOGGER.info("🌀 Starting All Clients ...")
+    
+    # Start the bot
     try:
         await bot.start()
     except Exception as e:
         LOGGER.info(f"🚫 Bot Error: {e}")
         sys.exit()
+    
     if LOG_GROUP_ID != 0:
         try:
             await bot.send_message(LOG_GROUP_ID, "**🤖 Bot Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Bot Started.")
+    
+    # Start the assistant (app)
     try:
-        await app.join_chat("AdityaServer")
-        await app.join_chat("AdityaDiscus")
-    except Exception:
-        pass
+        await app.start()
+    except Exception as e:
+        LOGGER.info(f"🚫 Assistant Error: {e}")
+        sys.exit()
+
     if LOG_GROUP_ID != 0:
         try:
             await app.send_message(LOG_GROUP_ID, "**🦋 Assistant Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Assistant Started.")
+
     try:
         await call.start()
     except Exception as e:
         LOGGER.info(f"🚫 PyTgCalls Error: {e}")
         sys.exit()
     LOGGER.info("✅ PyTgCalls Started.")
+    
     await asyncio.sleep(1)
     LOGGER.info("✅ Successfully Hosted Your Bot !!")
     LOGGER.info("✅ Now Do Visit: @AdityaServer !!")
 
-    # Move the idle() here so it runs in the main thread
+    # Call idle() for the bot to keep running
     await idle()
 
 # Flask run function (to be run in a separate thread)
 def run_flask():
-    app.run(host="0.0.0.0", port=8000)  # Running Flask on port 8000
+    dell.run(host="0.0.0.0", port=8000)  # Running Flask on port 8000
 
 # Bot run function (async)
 def run_bot():
@@ -1173,9 +1176,9 @@ def run_bot():
     loop.run_until_complete(main())  # Run the bot
 
 if __name__ == "__main__":
-    # Start the Flask server in a separate thread
+    # Start Flask server in a separate thread
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
 
-    # Start the bot in the main thread
+    # Start bot in the main thread
     run_bot()
