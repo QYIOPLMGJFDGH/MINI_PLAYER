@@ -1175,3 +1175,4 @@ if __name__ == "__main__":
     # Start the bot in a separate thread
     bot_thread = Thread(target=run_bot)
     bot_thread.start()
+    app.run(host="0.0.0.0", port=8000)
